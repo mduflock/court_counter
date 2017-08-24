@@ -3,8 +3,8 @@
 
 package com.example.android.courtcounteruserinput;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -12,11 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.Stack;
-
-import static com.example.android.courtcounteruserinput.R.id.away_team_name;
-import static com.example.android.courtcounteruserinput.R.id.big_title;
-import static com.example.android.courtcounteruserinput.R.id.home_team_name;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         // these must be final because they are being used in the class below, and cannot
         // be changed (apparently)
-        final EditText home_team_name = (EditText) findViewById(R.id.home_team_name);
+        final EditText homeTeamName = (EditText) findViewById(R.id.home_team_name);
         final EditText away_team_name = (EditText) findViewById(R.id.away_team_name);
 
         // to avoid duplicating code, I created a new TextWatcher object that will be used
@@ -41,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
         TextWatcher tracker = new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String home_name = home_team_name.getText().toString();
-                String away_name = away_team_name.getText().toString();
+                String homeName = homeTeamName.getText().toString();
+                String awayName = away_team_name.getText().toString();
 
-                updateBigTitle(home_name, away_name);
+                updateBigTitle(homeName, awayName);
             }
 
             // these are necessary because TextWatcher is an abstract class - ignore
@@ -62,15 +57,15 @@ public class MainActivity extends AppCompatActivity {
 
         // the TextWatcher object tracker will now be passed to the home_team_name and
         // away_team_name objects, which will use it in the method addTextChangedListener
-        home_team_name.addTextChangedListener(tracker);
+        homeTeamName.addTextChangedListener(tracker);
         away_team_name.addTextChangedListener(tracker);
     }
 
 
     // Big title functions to update the game title
     public void updateBigTitle(String home_team_name, String away_team_name) {
-        TextView big_title = (TextView) findViewById(R.id.big_title);
-        big_title.setText(home_team_name + " vs " + away_team_name);
+        TextView bigTitle = (TextView) findViewById(R.id.big_title);
+        bigTitle.setText(home_team_name + " vs " + away_team_name);
     }
 
 
@@ -135,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // This method determines the winner and adjusts the Winner Banner text.
+    // This method determines the winner and adjusts the Winner Banner text while in-game
     public void calcWinner() {
         if (teamAPoints > teamBPoints) {
             ((TextView) findViewById(R.id.winner)).setText("The home team is winning!");
@@ -163,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.winner)).setText("It's a tie!");
             }
 
+            // reset the text on the gameOver button
             ((Button) findViewById(R.id.game_over_button)).setText("The game is over! " +
                     "Click to start a new game.");
 
@@ -178,6 +174,18 @@ public class MainActivity extends AppCompatActivity {
             teamAPoints = 0;
             ((TextView) findViewById(R.id.b_points)).setText("Points: 0");
             teamBPoints = 0;
+
+            //reset the text in Big Title and in the team name boxes
+            EditText home_team = (EditText) findViewById(R.id.away_team_name);
+            EditText away_team = (EditText) findViewById(R.id.home_team_name);
+
+            home_team.setText("");
+            away_team.setText("");
+            home_team.setHint("Home Team");
+            away_team.setHint("Away Team");
+
+            TextView big_title = (TextView) findViewById(R.id.big_title);
+            big_title.setText("New Game");
 
             //enable buttons
             enableButtons(true);
