@@ -170,4 +170,18 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/see_log_button"
+        android:text="See All Past Games"
+        android:layout_marginTop="16dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:background="@color/colorPrimary"
+        android:textSize="16sp"
+        android:onClick="callGameLog"
+        />
+
 </LinearLayout>

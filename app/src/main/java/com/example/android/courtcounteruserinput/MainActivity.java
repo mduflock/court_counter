@@ -3,6 +3,7 @@
 
 package com.example.android.courtcounteruserinput;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -12,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.android.courtcounteruserinput.Game;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     int teamAPoints = 0;
     int teamBPoints = 0;
     boolean gameOver = false;
+    String winner = "";
+    String teamAName = "";
+    String teamBName = "";
 
     // override the onCreate function from AppCompatActivity
     @Override
@@ -66,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
     public void updateBigTitle(String home_team_name, String away_team_name) {
         TextView bigTitle = (TextView) findViewById(R.id.big_title);
         bigTitle.setText(home_team_name + " vs " + away_team_name);
+
+        // we also update the global variables for the team names here, because we already accessed
+        // them anyway
+        teamAName = home_team_name;
+        teamBName = away_team_name;
     }
 
 
@@ -152,10 +163,13 @@ public class MainActivity extends AppCompatActivity {
         if (gameOver) {
             if (teamAPoints > teamBPoints) {
                 ((TextView) findViewById(R.id.winner)).setText("The home team won!");
+                winner = "Team A";
             } else if (teamBPoints > teamAPoints) {
                 ((TextView) findViewById(R.id.winner)).setText("The away team won!");
+                winner = "Team B";
             } else {
                 ((TextView) findViewById(R.id.winner)).setText("It's a tie!");
+                winner = "";
             }
 
             // reset the text on the gameOver button
@@ -163,6 +177,11 @@ public class MainActivity extends AppCompatActivity {
                     "Click to start a new game.");
 
             enableButtons(false);
+
+            // store the data from the game in a new game object
+            Game storeGameDataObj = new Game(teamAName, teamBName, teamAPoints, teamBPoints, winner);
+            storeGameDataObj.writeToFile(this);
+
         } // end if for gameOver
 
         if (!gameOver) {
@@ -176,8 +195,8 @@ public class MainActivity extends AppCompatActivity {
             teamBPoints = 0;
 
             //reset the text in Big Title and in the team name boxes
-            EditText home_team = (EditText) findViewById(R.id.away_team_name);
-            EditText away_team = (EditText) findViewById(R.id.home_team_name);
+            EditText home_team = (EditText) findViewById(R.id.home_team_name);
+            EditText away_team = (EditText) findViewById(R.id.away_team_name);
 
             home_team.setText("");
             away_team.setText("");
@@ -207,4 +226,9 @@ public class MainActivity extends AppCompatActivity {
         ((Button) findViewById(R.id.b_two_button)).setEnabled(enabled);
         ((Button) findViewById(R.id.b_three_button)).setEnabled(enabled);
     }
+
+    public void callGameLog (View view) {
+        startActivity(new Intent(this, GameLogActivity.class));
+    }
+
 } // end of class MainActivity
